@@ -45,7 +45,6 @@ pub fn day_01_b(input: String) -> u32 {
 
 #[cfg(test)]
 mod tests {
-    // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
 
     #[test]
