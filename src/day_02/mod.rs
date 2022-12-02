@@ -9,8 +9,8 @@ pub fn rock_paper_scissors(input: String) -> u32 {
 fn input_line_to_round(line: &str) -> Option<Round> {
     let splitted: Vec<&str> = line.trim().split(' ').collect();
     return Some(Round {
-        my_throw: letter_to_throw(splitted[0])?,
-        their_throw: letter_to_throw(splitted[1])?,
+        their_throw: letter_to_throw(splitted[0])?,
+        my_throw: letter_to_throw(splitted[1])?,
     });
 }
 
