@@ -6,6 +6,37 @@ pub fn rock_paper_scissors(input: String) -> u32 {
     return score;
 }
 
+pub fn rock_paper_scissors_pt2(input: String) -> u32 {
+    let score: u32 = input.split('\n')
+        .filter_map(input_line_to_round_pt2)
+        .map(|r| r.score())
+        .sum();
+    return score;
+}
+
+fn input_line_to_round_pt2(line: &str) -> Option<Round> {
+    let splitted: Vec<&str> = line.trim().split(' ').collect();
+    let their_throw = letter_to_throw(splitted[0])?;
+    let my_throw = match splitted[1] {
+        "X" => Some(get_winning_throw_for_opponent(get_winning_throw_for_opponent(their_throw))), // loose
+        "Y" => Some(their_throw), // draw
+        "Z" => Some(get_winning_throw_for_opponent(their_throw)), // win
+        _ => None,
+    }?;
+    return Some(Round {
+        their_throw,
+        my_throw,
+    });
+}
+
+fn get_winning_throw_for_opponent(their_throw: Throw) -> Throw {
+    return match their_throw {
+        Throw::ROCK => Throw::PAPER,
+        Throw::PAPER => Throw::SCISSORS,
+        Throw::SCISSORS => Throw::ROCK,
+    };
+}
+
 fn input_line_to_round(line: &str) -> Option<Round> {
     let splitted: Vec<&str> = line.trim().split(' ').collect();
     return Some(Round {
@@ -66,7 +97,7 @@ impl Round {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Throw {
     ROCK,
     PAPER,
@@ -105,5 +136,16 @@ mod tests {
         };
         let expected_score = expected_outcome + expected_bonus;
         assert_eq!(round.score(), expected_score);
+    }
+
+    #[test]
+    fn test_part2() {
+        let input = r#"
+            A Y
+            B X
+            C Z
+        "#;
+        let score = rock_paper_scissors_pt2(input.to_string());
+        assert_eq!(score, 12);
     }
 }
