@@ -3,7 +3,7 @@ use regex::{self, Regex};
 fn parse_calorie_line(calorie_line: &str) -> u32 {
     match calorie_line.trim().parse() {
         Ok(val) => val,
-        Err(_) => 0
+        Err(_) => 0,
     }
 }
 
@@ -37,10 +37,7 @@ pub fn day_01_b(input: String) -> u32 {
         .map(compute_per_elf_calories)
         .collect();
     per_elf_calories.sort();
-    return per_elf_calories.into_iter()
-        .rev()
-        .take(3)
-        .sum();
+    return per_elf_calories.into_iter().rev().take(3).sum();
 }
 
 #[cfg(test)]

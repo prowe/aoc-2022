@@ -1,5 +1,6 @@
 pub fn rock_paper_scissors(input: String) -> u32 {
-    let score: u32 = input.split('\n')
+    let score: u32 = input
+        .split('\n')
         .filter_map(input_line_to_round)
         .map(|r| r.score())
         .sum();
@@ -7,7 +8,8 @@ pub fn rock_paper_scissors(input: String) -> u32 {
 }
 
 pub fn rock_paper_scissors_pt2(input: String) -> u32 {
-    let score: u32 = input.split('\n')
+    let score: u32 = input
+        .split('\n')
         .filter_map(input_line_to_round_pt2)
         .map(|r| r.score())
         .sum();
@@ -18,8 +20,10 @@ fn input_line_to_round_pt2(line: &str) -> Option<Round> {
     let splitted: Vec<&str> = line.trim().split(' ').collect();
     let their_throw = letter_to_throw(splitted[0])?;
     let my_throw = match splitted[1] {
-        "X" => Some(get_winning_throw_for_opponent(get_winning_throw_for_opponent(their_throw))), // loose
-        "Y" => Some(their_throw), // draw
+        "X" => Some(get_winning_throw_for_opponent(
+            get_winning_throw_for_opponent(their_throw),
+        )), // loose
+        "Y" => Some(their_throw),                                 // draw
         "Z" => Some(get_winning_throw_for_opponent(their_throw)), // win
         _ => None,
     }?;
@@ -63,7 +67,7 @@ fn letter_to_throw(letter: &str) -> Option<Throw> {
 #[derive(Debug)]
 struct Round {
     my_throw: Throw,
-    their_throw: Throw
+    their_throw: Throw,
 }
 
 impl Round {
@@ -86,7 +90,7 @@ impl Round {
                 Throw::ROCK => lose,
                 Throw::PAPER => win,
                 Throw::SCISSORS => draw,
-            }
+            },
         };
         let bonus = match self.my_throw {
             Throw::ROCK => 1,
@@ -101,7 +105,7 @@ impl Round {
 enum Throw {
     ROCK,
     PAPER,
-    SCISSORS
+    SCISSORS,
 }
 
 #[cfg(test)]
@@ -129,7 +133,12 @@ mod tests {
     #[test_case(Throw::SCISSORS, Throw::ROCK, 0, 3)]
     #[test_case(Throw::SCISSORS, Throw::PAPER, 6, 3)]
     #[test_case(Throw::SCISSORS, Throw::SCISSORS, 3, 3)]
-    fn test_score_calculation(my_throw: Throw, their_throw: Throw, expected_outcome: u32, expected_bonus: u32) {
+    fn test_score_calculation(
+        my_throw: Throw,
+        their_throw: Throw,
+        expected_outcome: u32,
+        expected_bonus: u32,
+    ) {
         let round = Round {
             my_throw: my_throw,
             their_throw: their_throw,
