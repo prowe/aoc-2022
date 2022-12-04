@@ -2,7 +2,7 @@ use std::io::{self, Read};
 
 use crate::{
     day_01::{day_01, day_01_b},
-    day_02::{rock_paper_scissors, rock_paper_scissors_pt2}, day_03::calc_total_of_high_priority,
+    day_02::{rock_paper_scissors, rock_paper_scissors_pt2}, day_03::{calc_total_of_high_priority, calc_group_badge_totals},
 };
 use std::env;
 
@@ -24,6 +24,7 @@ fn main() -> io::Result<()> {
         "2" => rock_paper_scissors(buffer).to_string(),
         "2b" => rock_paper_scissors_pt2(buffer).to_string(),
         "3" => calc_total_of_high_priority(buffer.as_str()).to_string(),
+        "3b" => calc_group_badge_totals(buffer.as_str()).to_string(),
         _ => "unknown".to_string(),
     };
     println!("Result: {}", result);

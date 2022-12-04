@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::{collections::HashSet, str::Chars};
 
 pub fn calc_total_of_high_priority(input: &str) -> u32 {
     let total = input
@@ -7,6 +7,38 @@ pub fn calc_total_of_high_priority(input: &str) -> u32 {
         .map(calc_line_total)
         .sum();
     return total;
+}
+
+pub fn calc_group_badge_totals(input: &str) -> u32 {
+    let cleaned_lines: Vec<&str> = input
+        .lines()
+        .map(str::trim)
+        .filter(|l| !l.is_empty())
+        .collect();
+
+    return cleaned_lines
+        .chunks(3)
+        .map(find_badge_letter)
+        .sum();
+}
+    
+fn find_badge_letter(lines: &[&str]) -> u32 {
+    let mut common: HashSet<char> = HashSet::from_iter(lines[0].chars());
+    for line in lines {
+        let letters: HashSet<char> =  HashSet::from_iter(line.chars());
+        common = common.intersection(&letters).cloned().collect();
+    }
+    // let common = lines
+    //     .iter()
+    //     .map(|line| HashSet::from_iter(line.chars()))
+    //     .reduce(|accum, item| accum.intersection(&item).cloned().collect());
+
+    println!("Groups: {:?}", common);
+    let first_letter = common.iter().cloned().next();
+    return match first_letter {
+        Some(l) => letter_to_value(&l),
+        None => 0
+    };
 }
 
 fn calc_line_total(line: &str) -> u32 {
@@ -56,5 +88,20 @@ mod tests {
     fn test_letter_to_value(letter: char, expected_value: u32) {
         let val = letter_to_value(&letter);
         assert_eq!(val, expected_value);
+    }
+
+    #[test]
+    fn test_badge_value() {
+        let input= r#"
+            vJrwpWtwJgWrhcsFMMfFFhFp
+            jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+            PmmdzqPrVvPwwTWBwg
+            wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+            ttgJtRGJQctTZtZT
+            CrZsJsPPZsGzwwsLwLmpwMDw
+        "#;
+
+        let total = calc_group_badge_totals(input);
+        assert_eq!(total, 70);
     }
 }
