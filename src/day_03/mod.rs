@@ -1,11 +1,7 @@
-use std::{collections::HashSet, str::Chars};
+use std::{collections::HashSet};
 
 pub fn calc_total_of_high_priority(input: &str) -> u32 {
-    let total = input
-        .lines()
-        .map(|l| l.trim())
-        .map(calc_line_total)
-        .sum();
+    let total = input.lines().map(|l| l.trim()).map(calc_line_total).sum();
     return total;
 }
 
@@ -16,16 +12,13 @@ pub fn calc_group_badge_totals(input: &str) -> u32 {
         .filter(|l| !l.is_empty())
         .collect();
 
-    return cleaned_lines
-        .chunks(3)
-        .map(find_badge_letter)
-        .sum();
+    return cleaned_lines.chunks(3).map(find_badge_letter).sum();
 }
-    
+
 fn find_badge_letter(lines: &[&str]) -> u32 {
     let mut common: HashSet<char> = HashSet::from_iter(lines[0].chars());
     for line in lines {
-        let letters: HashSet<char> =  HashSet::from_iter(line.chars());
+        let letters: HashSet<char> = HashSet::from_iter(line.chars());
         common = common.intersection(&letters).cloned().collect();
     }
     // let common = lines
@@ -37,13 +30,18 @@ fn find_badge_letter(lines: &[&str]) -> u32 {
     let first_letter = common.iter().cloned().next();
     return match first_letter {
         Some(l) => letter_to_value(&l),
-        None => 0
+        None => 0,
     };
 }
 
 fn calc_line_total(line: &str) -> u32 {
     let compartment_size = line.len() / 2;
-    println!("Line: {}, len: {}, size: {}", line, line.len(), compartment_size);
+    println!(
+        "Line: {}, len: {}, size: {}",
+        line,
+        line.len(),
+        compartment_size
+    );
     let left: HashSet<char> = HashSet::from_iter(line.chars().take(compartment_size));
     let right: HashSet<char> = HashSet::from_iter(line.chars().skip(compartment_size));
     println!("Left: {:?}, right: {:?}", left, right);
@@ -68,7 +66,7 @@ mod tests {
 
     #[test]
     fn test_part1_sample() {
-        let input= r#"
+        let input = r#"
             vJrwpWtwJgWrhcsFMMfFFhFp
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
             PmmdzqPrVvPwwTWBwg
@@ -92,7 +90,7 @@ mod tests {
 
     #[test]
     fn test_badge_value() {
-        let input= r#"
+        let input = r#"
             vJrwpWtwJgWrhcsFMMfFFhFp
             jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
             PmmdzqPrVvPwwTWBwg
