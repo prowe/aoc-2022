@@ -101,7 +101,6 @@ struct Move {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use test_case::test_case;
 
     #[test]
     fn test_sample_input() {
