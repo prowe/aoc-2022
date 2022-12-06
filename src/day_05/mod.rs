@@ -3,15 +3,17 @@ use std::vec;
 use regex::{self, Regex};
 
 pub fn calculate_crane_moves(move_text: &str, mut stacks: Vec<Vec<char>>) -> String {
-    let moves: Vec<Move> = move_text.trim()
-        .lines()
-        .map(parse_to_move)
-        .collect();
+    let moves = parse_to_moves(move_text);
 
     log_stacks(&stacks);
     println!("Processing {:?} moves", moves.len());
 
+    let mut move_count = 0;
     for m in moves {
+        move_count += 1;
+        if stacks[m.source].len() < m.count {
+            panic!("Stack is empty for move: {:?} {:?}", move_count, m);
+        }
         for _i in 0..m.count {
             let ch = stacks[m.source].pop().unwrap();
             stacks[m.target].push(ch);
@@ -19,6 +21,30 @@ pub fn calculate_crane_moves(move_text: &str, mut stacks: Vec<Vec<char>>) -> Str
     }
     
     log_stacks(&stacks);
+    return get_stack_tops(stacks);
+}
+
+pub fn calculate_crate_mover_9001(move_text: &str, mut stacks: Vec<Vec<char>>) -> String {
+    let moves = parse_to_moves(move_text);
+
+    for m in moves {
+        let cut_index = stacks[m.source].len() - m.count;
+        let mut pick_up_crates = stacks[m.source].split_off(cut_index);
+        stacks[m.target].append(&mut pick_up_crates);        
+    }
+
+    return get_stack_tops(stacks);
+}
+
+fn parse_to_moves(move_text: &str) -> Vec<Move> {
+    let moves: Vec<Move> = move_text.trim()
+        .lines()
+        .map(parse_to_move)
+        .collect();
+    return moves;
+}
+
+fn get_stack_tops(stacks: Vec<Vec<char>>) -> String {
     let tops: String = stacks
         .iter()
         .filter_map(|s| s.last())
@@ -37,17 +63,20 @@ fn log_stacks(stacks: &Vec<Vec<char>>) {
 }
 
 pub fn build_stacks() -> Vec<Vec<char>> {
-    return vec![
-        "ZTFRQJG".chars().collect(),
-        "GWM".chars().collect(),
-        "JNHG".chars().collect(),
-        "JRCNW".chars().collect(),
-        "WFSBGQVM".chars().collect(),
-        "SRTDVWC".chars().collect(),
-        "HBNCDZGV".chars().collect(),
-        "SJNMGC".chars().collect(),
-        "GPNWCJDL".chars().collect(),
+    let ordered = vec![
+        "GJWRFTZ",
+        "MWG",
+        "GHNJ",
+        "WNCRJ",
+        "MVQGBSFW",
+        "CWVDTRS",
+        "VGZDCNBH",
+        "CGMNJS",
+        "LDJCWNPG",
     ];
+    return ordered.iter()
+        .map(|s| s.chars().rev().collect())
+        .collect();
 }
 
 fn parse_to_move(line: &str) -> Move {
@@ -89,5 +118,22 @@ mod tests {
         "#;
         let resulting_top = calculate_crane_moves(input.trim(), stacks);
         assert_eq!(resulting_top, "CMZ");
+    }
+
+    #[test]
+    fn test_improved_crane() {
+        let stacks = vec![
+            vec!['Z', 'N'],
+            vec!['M', 'C', 'D'],
+            vec!['P'],
+        ];
+        let input = r#"
+            move 1 from 2 to 1
+            move 3 from 1 to 3
+            move 2 from 2 to 1
+            move 1 from 1 to 2
+        "#;
+        let resulting_top = calculate_crate_mover_9001(input.trim(), stacks);
+        assert_eq!(resulting_top, "MCD");
     }
 }
