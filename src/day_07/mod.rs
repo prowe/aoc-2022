@@ -5,11 +5,6 @@ pub fn calculate_directory_size_sum(input: &str) -> u32 {
     let file_list = parse_commands_to_file_list(input);
     let dir_list = build_directory_list(&file_list);
 
-    println!("Dirs: ");
-    for f in &dir_list {
-        println!("{:?}", f);
-    }
-
     let total_size = dir_list
         .iter()
         .filter(|d| d.size <= 100000)
@@ -24,7 +19,7 @@ fn parse_commands_to_file_list(input: &str) -> Vec<ElvenFile> {
 
     let change_dir_regex = Regex::new(r"\$ cd (\S+)").unwrap();
     let file_name_regex = Regex::new(r"(\d+) (\S+)").unwrap();
-    
+
     for l in input.lines() {
         let trimmed = l.trim();
         if let Some(file_name_captures) = file_name_regex.captures(trimmed) {
@@ -38,6 +33,7 @@ fn parse_commands_to_file_list(input: &str) -> Vec<ElvenFile> {
                 path: path,
                 size: file_name_captures[1].parse().unwrap()
             });
+            continue;
         }
 
         if let Some(change_dir) = change_dir_regex.captures(trimmed) {
@@ -48,12 +44,9 @@ fn parse_commands_to_file_list(input: &str) -> Vec<ElvenFile> {
                 },
                 dir => cur_dir.push(dir.to_owned()),
             }
+            continue;
         }
     }
-
-    // for f in &files {
-    //     println!("{:?}", f);
-    // }
     return files;
 }
 
@@ -138,4 +131,6 @@ mod tests {
         let size = calculate_directory_size_sum(input.trim());
         assert_eq!(size, 95437);
     }
+
+
 }

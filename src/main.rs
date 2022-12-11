@@ -4,7 +4,7 @@ use crate::{
     day_01::{day_01, day_01_b},
     day_02::{rock_paper_scissors, rock_paper_scissors_pt2},
     day_03::{calc_group_badge_totals, calc_total_of_high_priority},
-    day_04::{count_containing_pairs, count_overlapping_pairs}, day_05::{calculate_crane_moves, build_stacks, calculate_crate_mover_9001}, day_06::{calculate_first_marker, calculate_start_of_message_index}, day_07::calculate_directory_size_sum,
+    day_04::{count_containing_pairs, count_overlapping_pairs}, day_05::{calculate_crane_moves, build_stacks, calculate_crate_mover_9001}, day_06::{calculate_first_marker, calculate_start_of_message_index}, day_07::calculate_directory_size_sum, day_08::{count_visible_trees, calc_max_senic_score},
 };
 use std::env;
 
@@ -15,6 +15,7 @@ mod day_04;
 mod day_05;
 mod day_06;
 mod day_07;
+mod day_08;
 
 fn main() -> io::Result<()> {
     let mut buffer = String::new();
@@ -38,6 +39,9 @@ fn main() -> io::Result<()> {
         "6" => calculate_first_marker(buffer.as_str()).to_string(),
         "6b" => calculate_start_of_message_index(buffer.as_str()).to_string(),
         "7" => calculate_directory_size_sum(buffer.as_str()).to_string(),
+
+        "8" => count_visible_trees(buffer.as_str()).to_string(),
+        "8b" => calc_max_senic_score(buffer.as_str()).to_string(),
         
         _ => "unknown".to_string(),
     };
