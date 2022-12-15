@@ -1,13 +1,9 @@
-use std::{collections::HashSet, fmt::{Debug}};
+use std::{collections::HashSet, fmt::Debug};
 
 pub fn count_tail_positions(input: &str) -> usize {
-    let lines: Vec<&str> = input
-        .trim()
-        .lines()
-        .map(str::trim)
-        .collect();
-    let mut head_loc = Position {x: 0, y: 0};
-    let mut tail_pos: Vec<Position> = vec![Position {x: 0, y: 0}];
+    let lines: Vec<&str> = input.trim().lines().map(str::trim).collect();
+    let mut head_loc = Position { x: 0, y: 0 };
+    let mut tail_pos: Vec<Position> = vec![Position { x: 0, y: 0 }];
 
     for line in lines {
         let parts: Vec<&str> = line.split(' ').collect();
@@ -22,15 +18,27 @@ pub fn count_tail_positions(input: &str) -> usize {
         for _i in 0..distance {
             head_loc.x += delta.0;
             head_loc.y += delta.1;
-            
+
             let current_tail = tail_pos.last().unwrap();
             if current_tail.is_too_far_away(&head_loc) {
                 let diff = current_tail.distance(&head_loc);
                 tail_pos.push(match (diff.x, diff.y) {
-                    (2, _) => Position { x: head_loc.x - 1, y: head_loc.y },
-                    (-2, _) => Position { x: head_loc.x + 1, y: head_loc.y },
-                    (_, 2) => Position { x: head_loc.x, y: head_loc.y - 1 },
-                    (_, -2) => Position { x: head_loc.x, y: head_loc.y + 1 },
+                    (2, _) => Position {
+                        x: head_loc.x - 1,
+                        y: head_loc.y,
+                    },
+                    (-2, _) => Position {
+                        x: head_loc.x + 1,
+                        y: head_loc.y,
+                    },
+                    (_, 2) => Position {
+                        x: head_loc.x,
+                        y: head_loc.y - 1,
+                    },
+                    (_, -2) => Position {
+                        x: head_loc.x,
+                        y: head_loc.y + 1,
+                    },
 
                     _ => *current_tail,
                 });
@@ -41,15 +49,11 @@ pub fn count_tail_positions(input: &str) -> usize {
     }
 
     let uniq_pos: HashSet<&Position> = HashSet::from_iter(tail_pos.iter());
-    return uniq_pos.len();    
+    return uniq_pos.len();
 }
 
 pub fn count_multi_knot_tail_position(input: &str) -> usize {
-    let lines: Vec<&str> = input
-        .trim()
-        .lines()
-        .map(str::trim)
-        .collect();
+    let lines: Vec<&str> = input.trim().lines().map(str::trim).collect();
     let mut knot_positions: Vec<Position> = init_knot_vec();
     let mut tail_positions: HashSet<Position> = HashSet::new();
 
@@ -62,7 +66,12 @@ pub fn count_multi_knot_tail_position(input: &str) -> usize {
     return tail_positions.len();
 }
 
-fn apply_move_to_knots(knots: &mut Vec<Position>, direction: &str, distance: i32, tail_history: &mut HashSet<Position>) {
+fn apply_move_to_knots(
+    knots: &mut Vec<Position>,
+    direction: &str,
+    distance: i32,
+    tail_history: &mut HashSet<Position>,
+) {
     let delta: (i32, i32) = match direction {
         "R" => (1, 0),
         "L" => (-1, 0),
@@ -75,12 +84,12 @@ fn apply_move_to_knots(knots: &mut Vec<Position>, direction: &str, distance: i32
         let head = knots[0];
         knots[0] = Position {
             x: head.x + delta.0,
-            y: head.y + delta.1
+            y: head.y + delta.1,
         };
 
         for k in 1..knots.len() {
             let my_knot = knots[k];
-            let my_head = knots[k-1];
+            let my_head = knots[k - 1];
             if my_knot.is_too_far_away(&my_head) {
                 knots[k] = my_knot.compute_new_position(&my_head);
             }
@@ -92,7 +101,7 @@ fn apply_move_to_knots(knots: &mut Vec<Position>, direction: &str, distance: i32
 
 fn init_knot_vec() -> Vec<Position> {
     let mut knot_positions: Vec<Position> = Vec::with_capacity(10);
-    knot_positions.resize(10, Position { x: 0, y: 0});
+    knot_positions.resize(10, Position { x: 0, y: 0 });
     return knot_positions;
 }
 
@@ -102,10 +111,7 @@ fn plot_knots(knots: &Vec<Position>) {
     let min_y = knots.iter().map(|p| p.y).min().unwrap();
     let max_y = knots.iter().map(|p| p.y).max().unwrap();
     let mut plot: Vec<Vec<char>> = vec![
-        vec![
-            '.';
-            (max_x - min_x + 1).try_into().unwrap()
-        ];
+        vec!['.'; (max_x - min_x + 1).try_into().unwrap()];
         (max_y - min_y + 1).try_into().unwrap()
     ];
     for i in 0..knots.len() {
@@ -129,12 +135,14 @@ struct Position {
 
 impl Position {
     fn is_too_far_away(&self, other: &Position) -> bool {
-        return (self.x - other.x).abs() > 1 || 
-            (self.y - other.y).abs() > 1;
+        return (self.x - other.x).abs() > 1 || (self.y - other.y).abs() > 1;
     }
-    
+
     fn distance(&self, other: &Position) -> Position {
-        return Position { x: other.x - self.x, y: other.y - self.y };
+        return Position {
+            x: other.x - self.x,
+            y: other.y - self.y,
+        };
     }
 
     fn compute_new_position(&self, head: &Position) -> Position {
@@ -202,45 +210,54 @@ mod tests {
         let mut knots = init_knot_vec();
         let mut tail_history: HashSet<Position> = HashSet::new();
         apply_move_to_knots(&mut knots, "R", 5, &mut tail_history);
-        assert_eq!(knots, vec![
-            Position {x: 5, y: 0},
-            Position {x: 4, y: 0},
-            Position {x: 3, y: 0},
-            Position {x: 2, y: 0},
-            Position {x: 1, y: 0},
-            Position {x: 0, y: 0},
-            Position {x: 0, y: 0},
-            Position {x: 0, y: 0},
-            Position {x: 0, y: 0},
-            Position {x: 0, y: 0},
-        ]);
+        assert_eq!(
+            knots,
+            vec![
+                Position { x: 5, y: 0 },
+                Position { x: 4, y: 0 },
+                Position { x: 3, y: 0 },
+                Position { x: 2, y: 0 },
+                Position { x: 1, y: 0 },
+                Position { x: 0, y: 0 },
+                Position { x: 0, y: 0 },
+                Position { x: 0, y: 0 },
+                Position { x: 0, y: 0 },
+                Position { x: 0, y: 0 },
+            ]
+        );
 
         apply_move_to_knots(&mut knots, "U", 8, &mut tail_history);
-        assert_eq!(knots, vec![
-            Position {x: 5, y: 8},
-            Position {x: 5, y: 7},
-            Position {x: 5, y: 6},
-            Position {x: 5, y: 5},
-            Position {x: 5, y: 4},
-            Position {x: 4, y: 4},
-            Position {x: 3, y: 3},
-            Position {x: 2, y: 2},
-            Position {x: 1, y: 1},
-            Position {x: 0, y: 0},
-        ]);
+        assert_eq!(
+            knots,
+            vec![
+                Position { x: 5, y: 8 },
+                Position { x: 5, y: 7 },
+                Position { x: 5, y: 6 },
+                Position { x: 5, y: 5 },
+                Position { x: 5, y: 4 },
+                Position { x: 4, y: 4 },
+                Position { x: 3, y: 3 },
+                Position { x: 2, y: 2 },
+                Position { x: 1, y: 1 },
+                Position { x: 0, y: 0 },
+            ]
+        );
 
         apply_move_to_knots(&mut knots, "L", 8, &mut tail_history);
-        assert_eq!(knots, vec![
-            Position {x: -3, y: 8},
-            Position {x: -2, y: 8},
-            Position {x: -1, y: 8},
-            Position {x: 0, y: 8},
-            Position {x: 1, y: 8},
-            Position {x: 1, y: 7},
-            Position {x: 1, y: 6},
-            Position {x: 1, y: 5},
-            Position {x: 1, y: 4},
-            Position {x: 1, y: 3},
-        ]);
+        assert_eq!(
+            knots,
+            vec![
+                Position { x: -3, y: 8 },
+                Position { x: -2, y: 8 },
+                Position { x: -1, y: 8 },
+                Position { x: 0, y: 8 },
+                Position { x: 1, y: 8 },
+                Position { x: 1, y: 7 },
+                Position { x: 1, y: 6 },
+                Position { x: 1, y: 5 },
+                Position { x: 1, y: 4 },
+                Position { x: 1, y: 3 },
+            ]
+        );
     }
 }

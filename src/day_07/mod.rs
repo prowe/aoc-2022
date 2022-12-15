@@ -1,5 +1,9 @@
-use std::{fmt::{self}, iter, collections::HashSet};
 use regex::{self, Regex};
+use std::{
+    collections::HashSet,
+    fmt::{self},
+    iter,
+};
 
 pub fn calculate_directory_size_sum(input: &str) -> u32 {
     let file_list = parse_commands_to_file_list(input);
@@ -29,9 +33,9 @@ fn parse_commands_to_file_list(input: &str) -> Vec<ElvenFile> {
                 .chain(iter::once(file_name_captures[2].to_string()))
                 .collect();
 
-            files.push(ElvenFile { 
+            files.push(ElvenFile {
                 path: path,
-                size: file_name_captures[1].parse().unwrap()
+                size: file_name_captures[1].parse().unwrap(),
             });
             continue;
         }
@@ -41,7 +45,7 @@ fn parse_commands_to_file_list(input: &str) -> Vec<ElvenFile> {
                 "/" => cur_dir.truncate(0),
                 ".." => {
                     cur_dir.pop();
-                },
+                }
                 dir => cur_dir.push(dir.to_owned()),
             }
             continue;
@@ -51,14 +55,16 @@ fn parse_commands_to_file_list(input: &str) -> Vec<ElvenFile> {
 }
 
 fn build_directory_list(file_list: &Vec<ElvenFile>) -> Vec<ElvenFile> {
-    let dir_paths: HashSet<Vec<String>> = HashSet::from_iter(file_list
-        .iter()
-        .map(|f| f.path[..(f.path.len() - 1)].to_vec())
+    let dir_paths: HashSet<Vec<String>> = HashSet::from_iter(
+        file_list
+            .iter()
+            .map(|f| f.path[..(f.path.len() - 1)].to_vec()),
     );
-    let dirs = dir_paths.iter()
+    let dirs = dir_paths
+        .iter()
         .map(|path| ElvenFile {
             path: path.to_vec(),
-            size: compute_size_for_dir(path, file_list)
+            size: compute_size_for_dir(path, file_list),
         })
         .collect();
     return dirs;
@@ -131,6 +137,4 @@ mod tests {
         let size = calculate_directory_size_sum(input.trim());
         assert_eq!(size, 95437);
     }
-
-
 }

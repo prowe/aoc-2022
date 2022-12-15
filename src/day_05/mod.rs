@@ -19,7 +19,7 @@ pub fn calculate_crane_moves(move_text: &str, mut stacks: Vec<Vec<char>>) -> Str
             stacks[m.target].push(ch);
         }
     }
-    
+
     log_stacks(&stacks);
     return get_stack_tops(stacks);
 }
@@ -30,26 +30,19 @@ pub fn calculate_crate_mover_9001(move_text: &str, mut stacks: Vec<Vec<char>>) -
     for m in moves {
         let cut_index = stacks[m.source].len() - m.count;
         let mut pick_up_crates = stacks[m.source].split_off(cut_index);
-        stacks[m.target].append(&mut pick_up_crates);        
+        stacks[m.target].append(&mut pick_up_crates);
     }
 
     return get_stack_tops(stacks);
 }
 
 fn parse_to_moves(move_text: &str) -> Vec<Move> {
-    let moves: Vec<Move> = move_text.trim()
-        .lines()
-        .map(parse_to_move)
-        .collect();
+    let moves: Vec<Move> = move_text.trim().lines().map(parse_to_move).collect();
     return moves;
 }
 
 fn get_stack_tops(stacks: Vec<Vec<char>>) -> String {
-    let tops: String = stacks
-        .iter()
-        .filter_map(|s| s.last())
-        .cloned()
-        .collect();
+    let tops: String = stacks.iter().filter_map(|s| s.last()).cloned().collect();
     // println!("tops: {:?}", tops);
     return tops;
 }
@@ -64,19 +57,9 @@ fn log_stacks(stacks: &Vec<Vec<char>>) {
 
 pub fn build_stacks() -> Vec<Vec<char>> {
     let ordered = vec![
-        "GJWRFTZ",
-        "MWG",
-        "GHNJ",
-        "WNCRJ",
-        "MVQGBSFW",
-        "CWVDTRS",
-        "VGZDCNBH",
-        "CGMNJS",
-        "LDJCWNPG",
+        "GJWRFTZ", "MWG", "GHNJ", "WNCRJ", "MVQGBSFW", "CWVDTRS", "VGZDCNBH", "CGMNJS", "LDJCWNPG",
     ];
-    return ordered.iter()
-        .map(|s| s.chars().rev().collect())
-        .collect();
+    return ordered.iter().map(|s| s.chars().rev().collect()).collect();
 }
 
 fn parse_to_move(line: &str) -> Move {
@@ -104,11 +87,7 @@ mod tests {
 
     #[test]
     fn test_sample_input() {
-        let stacks = vec![
-            vec!['Z', 'N'],
-            vec!['M', 'C', 'D'],
-            vec!['P'],
-        ];
+        let stacks = vec![vec!['Z', 'N'], vec!['M', 'C', 'D'], vec!['P']];
         let input = r#"
             move 1 from 2 to 1
             move 3 from 1 to 3
@@ -121,11 +100,7 @@ mod tests {
 
     #[test]
     fn test_improved_crane() {
-        let stacks = vec![
-            vec!['Z', 'N'],
-            vec!['M', 'C', 'D'],
-            vec!['P'],
-        ];
+        let stacks = vec![vec!['Z', 'N'], vec!['M', 'C', 'D'], vec!['P']];
         let input = r#"
             move 1 from 2 to 1
             move 3 from 1 to 3

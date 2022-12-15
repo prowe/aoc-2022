@@ -1,4 +1,4 @@
-use std::{collections::HashSet};
+use std::collections::HashSet;
 
 pub fn calc_total_of_high_priority(input: &str) -> u32 {
     let total = input.lines().map(|l| l.trim()).map(calc_line_total).sum();

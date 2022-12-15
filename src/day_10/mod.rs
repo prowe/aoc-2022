@@ -9,7 +9,11 @@ pub fn calculate_total_signal(input: &str) -> i32 {
         .map(|step| compute_value_at_step(&expanded_steps, step))
         .collect();
 
-    println!("Total strength: {:?} {:?}", expanded_steps.len(), expanded_steps.iter().sum::<i32>());
+    println!(
+        "Total strength: {:?} {:?}",
+        expanded_steps.len(),
+        expanded_steps.iter().sum::<i32>()
+    );
     println!("Strengths: {:?}", strengths);
 
     return strengths.iter().sum();
@@ -18,14 +22,21 @@ pub fn calculate_total_signal(input: &str) -> i32 {
 pub fn parse_steps_into_ascii_art(input: &str) -> String {
     let expanded_steps = parse_input_into_expanded_steps(input);
     let register_values = fold_steps_into_values(&expanded_steps);
-    
+
     let mut screen: Vec<char> = Vec::new();
     for clock in 0..240 {
         let col = clock_to_col(clock);
-        let reg_value = if clock == 0 { 1 } else { register_values[(clock - 0) as usize] };
+        let reg_value = if clock == 0 {
+            1
+        } else {
+            register_values[(clock - 0) as usize]
+        };
         let sprite_pos = register_value_to_sprite_slice(reg_value);
         screen.push(if sprite_pos.contains(&col) { '#' } else { '.' });
-        println!("{:?}: last val: {:?} sprite_pos: {:?}, col: {:?}", clock, reg_value, sprite_pos, col);
+        println!(
+            "{:?}: last val: {:?} sprite_pos: {:?}, col: {:?}",
+            clock, reg_value, sprite_pos, col
+        );
     }
     return screen
         .as_slice()
@@ -37,12 +48,11 @@ pub fn parse_steps_into_ascii_art(input: &str) -> String {
 }
 
 fn fold_steps_into_values(expanded_steps: &Vec<i32>) -> Vec<i32> {
-    let mut folded = expanded_steps.iter()
-        .fold(vec![1], |mut acc, diff| {
-            let tail = acc.last().unwrap();
-            acc.push(tail + diff);
-            return acc;
-        });
+    let mut folded = expanded_steps.iter().fold(vec![1], |mut acc, diff| {
+        let tail = acc.last().unwrap();
+        acc.push(tail + diff);
+        return acc;
+    });
     folded.pop();
     return folded;
 }
@@ -72,19 +82,22 @@ fn compute_value_at_step(expanded_steps: &Vec<i32>, step: usize) -> i32 {
     let slice_end = step - 1;
     let sum: i32 = 1 + expanded_steps[..slice_end].into_iter().sum::<i32>();
     let value = sum * (step as i32);
-    println!("Computing value: {:?}, slice-end: {:?} sum: {:?} value: {:?}", step, slice_end, sum, value);
+    println!(
+        "Computing value: {:?}, slice-end: {:?} sum: {:?} value: {:?}",
+        step, slice_end, sum, value
+    );
     return value;
 }
 
 fn register_value_to_sprite_slice(value: i32) -> Range<i32> {
-    return value-1..value+2;
+    return value - 1..value + 2;
 }
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use std::{fs::File, io::Read};
     use test_case::test_case;
-    use super::*;
 
     #[test]
     fn test_sample_input_pt1() {
@@ -159,7 +172,8 @@ mod tests {
 #####.....#####.....#####.....#####.....
 ######......######......######......####
 #######.......#######.......#######.....
-        "#.trim();
+        "#
+        .trim();
         assert_eq!(art, expected_art);
     }
 }

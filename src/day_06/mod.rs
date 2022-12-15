@@ -13,7 +13,7 @@ pub fn calculate_index_of_unique_run(data_stream: &str, length: usize) -> usize 
         if i < length {
             continue;
         }
-        let history_slice = &data_stream[(i-length)..i];
+        let history_slice = &data_stream[(i - length)..i];
         let x: HashSet<char> = HashSet::from_iter(history_slice.chars());
         if x.len() == length {
             return i;
