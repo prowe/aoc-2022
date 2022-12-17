@@ -11,7 +11,7 @@ use crate::{
     day_08::{calc_max_senic_score, count_visible_trees},
     day_09::{count_multi_knot_tail_position, count_tail_positions},
     day_10::{calculate_total_signal, parse_steps_into_ascii_art},
-    day_11::compute_input_inspection_product,
+    day_11::compute_input_inspection_product, day_12::{day_12_pt_1, day_12_pt_2},
 };
 use std::env;
 
@@ -26,6 +26,7 @@ mod day_08;
 mod day_09;
 mod day_10;
 mod day_11;
+mod day_12;
 
 fn main() -> io::Result<()> {
     let mut buffer = String::new();
@@ -61,6 +62,9 @@ fn main() -> io::Result<()> {
 
         "11" => compute_input_inspection_product(20, 3).to_string(),
         "11b" => compute_input_inspection_product(10000, 1).to_string(),
+
+        "12" => day_12_pt_1(buffer.as_str()).to_string(),
+        "12b" => day_12_pt_2(buffer.as_str()).to_string(),
 
         _ => "unknown".to_string(),
     };
