@@ -127,7 +127,6 @@ mod tests {
     use std::{vec, u64::MAX};
 
     use super::*;
-    use test_case::test_case;
 
     fn build_sample_monkeys() -> Vec<Monkey> {
         return vec![

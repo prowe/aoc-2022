@@ -1,5 +1,3 @@
-use core::slice::Iter;
-
 pub fn count_visible_trees(input: &str) -> u32 {
     let forest = parse_string_to_forest(input);
     let mut tree_count = 0;

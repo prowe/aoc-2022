@@ -11,7 +11,7 @@ use crate::{
     day_08::{calc_max_senic_score, count_visible_trees},
     day_09::{count_multi_knot_tail_position, count_tail_positions},
     day_10::{calculate_total_signal, parse_steps_into_ascii_art},
-    day_11::compute_input_inspection_product, day_12::{day_12_pt_1, day_12_pt_2},
+    day_11::compute_input_inspection_product, day_12::{day_12_pt_1, day_12_pt_2}, day_13::sum_order_pair_indexes,
 };
 use std::env;
 
@@ -66,6 +66,8 @@ fn main() -> io::Result<()> {
 
         "12" => day_12_pt_1(buffer.as_str()).to_string(),
         "12b" => day_12_pt_2(buffer.as_str()).to_string(),
+
+        "13" => sum_order_pair_indexes(buffer.as_str()).to_string(),
 
         _ => "unknown".to_string(),
     };
